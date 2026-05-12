@@ -172,13 +172,83 @@ function ImageSlider({ images, alt }: ImageSliderProps) {
     );
 }
 
+function SacredBackground() {
+    return (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.15] mix-blend-multiply">
+            <svg
+                width="100%"
+                height="100%"
+                viewBox="0 0 1000 1000"
+                preserveAspectRatio="xMidYMid slice"
+                className="absolute inset-0 w-full h-full"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                {/* Thin flowing lines */}
+                {[...Array(12)].map((_, i) => (
+                    <motion.path
+                        key={i}
+                        d={`M -200 ${200 + i * 40} Q 250 ${100 + i * 20}, 500 ${400 + i * 10} T 1200 ${300 + i * 30}`}
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="0.5"
+                        className="text-sage-deep"
+                        initial={{ pathLength: 0, opacity: 0 }}
+                        animate={{ 
+                            pathLength: 1, 
+                            opacity: 1,
+                            d: [
+                                `M -200 ${200 + i * 40} Q 250 ${100 + i * 20}, 500 ${400 + i * 10} T 1200 ${300 + i * 30}`,
+                                `M -200 ${220 + i * 40} Q 300 ${150 + i * 20}, 500 ${380 + i * 10} T 1200 ${320 + i * 30}`,
+                                `M -200 ${200 + i * 40} Q 250 ${100 + i * 20}, 500 ${400 + i * 10} T 1200 ${300 + i * 30}`
+                            ]
+                        }}
+                        transition={{ 
+                            pathLength: { duration: 3, delay: i * 0.1 },
+                            opacity: { duration: 2, delay: i * 0.1 },
+                            d: { duration: 15, repeat: Infinity, ease: "linear" }
+                        }}
+                    />
+                ))}
+
+                {/* Counter waves for more depth */}
+                {[...Array(8)].map((_, i) => (
+                    <motion.path
+                        key={`c-${i}`}
+                        d={`M 1200 ${600 + i * 30} Q 750 ${800 + i * 10}, 500 ${600 - i * 20} T -200 ${700 + i * 40}`}
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="0.5"
+                        className="text-sage"
+                        initial={{ pathLength: 0, opacity: 0 }}
+                        animate={{ 
+                            pathLength: 1, 
+                            opacity: 1,
+                            d: [
+                                `M 1200 ${600 + i * 30} Q 750 ${800 + i * 10}, 500 ${600 - i * 20} T -200 ${700 + i * 40}`,
+                                `M 1200 ${620 + i * 30} Q 700 ${750 + i * 10}, 500 ${620 - i * 20} T -200 ${680 + i * 40}`,
+                                `M 1200 ${600 + i * 30} Q 750 ${800 + i * 10}, 500 ${600 - i * 20} T -200 ${700 + i * 40}`
+                            ]
+                        }}
+                        transition={{ 
+                            pathLength: { duration: 4, delay: i * 0.2 },
+                            opacity: { duration: 2, delay: i * 0.2 },
+                            d: { duration: 20, repeat: Infinity, ease: "linear" }
+                        }}
+                    />
+                ))}
+            </svg>
+        </div>
+    );
+}
+
 export default function SacredSpaces() {
     return (
         <section
             id="ruang-suci"
-            className="relative section-pad bg-bg-soft/30"
+            className="relative section-pad bg-bg-soft/30 overflow-hidden"
         >
-            <div className="container-narrow">
+            <SacredBackground />
+            <div className="container-narrow relative z-10">
                 <div className="text-center mb-16 md:mb-24">
                     <p className="eyebrow reveal">Fasilitas</p>
                     <h2 className="font-serif reveal text-4xl md:text-6xl mt-6 text-ink">

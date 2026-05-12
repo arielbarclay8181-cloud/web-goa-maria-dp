@@ -157,7 +157,7 @@ export default function Contact() {
                             PA DESA PUTERA
                         </p>
                         <p className="text-sm text-ink-soft mt-2 max-w-[260px] leading-relaxed">
-                            NMID: ID2020035706767<br/>
+                        <br/>
                             Pindai kode QR untuk donasi.
                         </p>
                         <p className="text-sm text-ink-soft mt-2 max-w-[260px] leading-relaxed">
