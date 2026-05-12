@@ -2,9 +2,9 @@ import { Clock, MapPin, Navigation2 } from "lucide-react";
 
 export default function Location() {
     const mapsEmbed =
-        "https://www.google.com/maps?q=Goa+Maria+Desa+Putera+Lebak+Bulus+Jakarta&output=embed";
+        "https://www.google.com/maps?q=Goa+Maria+Ratu+Rosari+Desa+Putera+Jagakarsa+Jakarta&output=embed";
     const mapsDirection =
-        "https://www.google.com/maps/dir/?api=1&destination=Goa+Maria+Desa+Putera+Lebak+Bulus+Jakarta";
+        "https://www.google.com/maps/dir/?api=1&destination=Goa+Maria+Ratu+Rosari+Desa+Putera+Jagakarsa+Jakarta";
 
     return (
         <section

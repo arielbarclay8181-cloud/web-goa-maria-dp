@@ -1,4 +1,176 @@
-import { Church, Cross } from "lucide-react";
+import React, { useState } from "react";
+import { Church, Cross, ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+
+const KAPEL_IMAGES = [
+    "/kapel1.jpeg",
+    "/kapel2.jpeg",
+    "/kapel3.jpeg",
+    "/kapel4.jpeg",
+];
+
+const JALAN_SALIB_IMAGES = [
+    "/jalansalib.png",
+    "/jalansalib2.jpeg",
+    "/jalansalib3.jpeg",
+    "/jalansalib4.jpeg",
+];
+
+interface ImageSliderProps {
+    images: string[];
+    alt: string;
+}
+
+function ImageSlider({ images, alt }: ImageSliderProps) {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+
+    React.useEffect(() => {
+        if (!isLightboxOpen) return;
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "ArrowRight") setCurrentIndex((prev) => (prev + 1) % images.length);
+            if (e.key === "ArrowLeft") setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+            if (e.key === "Escape") setIsLightboxOpen(false);
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [isLightboxOpen, images.length]);
+
+    const handleNext = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setCurrentIndex((prev) => (prev + 1) % images.length);
+    };
+
+    const handlePrev = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+    };
+
+    return (
+        <>
+            <div className="relative aspect-[16/10] overflow-hidden bg-bg-soft group cursor-pointer" onClick={() => setIsLightboxOpen(true)}>
+                <AnimatePresence mode="wait">
+                    <motion.img
+                        key={currentIndex}
+                        src={images[currentIndex]}
+                        alt={`${alt} - ${currentIndex + 1}`}
+                        initial={{ opacity: 0, scale: 1.05 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.98 }}
+                        transition={{ duration: 0.6, ease: [0.33, 1, 0.68, 1] }}
+                        className="absolute inset-0 w-full h-full object-cover"
+                    />
+                </AnimatePresence>
+                
+                <div className="absolute inset-0 bg-ink/5 group-hover:bg-ink/10 transition-colors" />
+
+                {/* Navigation Arrows */}
+                <div className="absolute inset-0 flex items-center justify-between px-4 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                    <button 
+                        onClick={handlePrev}
+                        className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white hover:bg-white/40 transition-all"
+                        aria-label="Previous image"
+                    >
+                        <ChevronLeft size={20} />
+                    </button>
+                    <button 
+                        onClick={handleNext}
+                        className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white hover:bg-white/40 transition-all"
+                        aria-label="Next image"
+                    >
+                        <ChevronRight size={20} />
+                    </button>
+                </div>
+
+                {/* Zoom Indicator */}
+                <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                    <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white">
+                        <Maximize2 size={14} />
+                    </div>
+                </div>
+
+                {/* Indicators */}
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 px-3 py-1.5 rounded-full bg-ink/20 backdrop-blur-sm border border-white/10 z-10">
+                    {images.map((_, idx) => (
+                        <div 
+                            key={idx}
+                            className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${idx === currentIndex ? 'bg-white w-3' : 'bg-white/40'}`}
+                        />
+                    ))}
+                </div>
+            </div>
+
+            {/* Lightbox */}
+            <AnimatePresence>
+                {isLightboxOpen && (
+                    <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100] flex items-center justify-center bg-ink/95 backdrop-blur-md p-4 md:p-12 lg:p-16"
+                        onClick={() => setIsLightboxOpen(false)}
+                    >
+                        <motion.button 
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="absolute top-6 right-6 md:top-10 md:right-10 text-white/50 hover:text-white transition-colors z-[120]"
+                            onClick={() => setIsLightboxOpen(false)}
+                        >
+                            <X size={36} strokeWidth={1.5} />
+                        </motion.button>
+
+                        <div className="relative w-full h-full flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+                            <AnimatePresence mode="wait">
+                                <motion.img 
+                                    key={currentIndex}
+                                    initial={{ opacity: 0, x: 20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -20 }}
+                                    transition={{ duration: 0.4, ease: "easeOut" }}
+                                    src={images[currentIndex]}
+                                    alt={alt}
+                                    className="max-w-full max-h-full object-contain shadow-2xl rounded-sm selection:bg-transparent"
+                                />
+                            </AnimatePresence>
+                            
+                            {/* Lightbox Nav */}
+                            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-0 md:px-0 pointer-events-none">
+                                <button 
+                                    onClick={handlePrev}
+                                    className="w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center text-white/30 hover:text-white hover:bg-white/10 transition-all pointer-events-auto -translate-x-4 md:-translate-x-10"
+                                >
+                                    <ChevronLeft size={48} strokeWidth={1} />
+                                </button>
+                                <button 
+                                    onClick={handleNext}
+                                    className="w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center text-white/30 hover:text-white hover:bg-white/10 transition-all pointer-events-auto translate-x-4 md:translate-x-10"
+                                >
+                                    <ChevronRight size={48} strokeWidth={1} />
+                                </button>
+                            </div>
+
+                            {/* Lightbox Indicators */}
+                            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex gap-2 p-6">
+                                {images.map((_, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setCurrentIndex(idx);
+                                        }}
+                                        className={`h-1 rounded-full transition-all duration-500 ${idx === currentIndex ? 'bg-white w-8' : 'bg-white/20 w-4'}`}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </>
+    );
+}
 
 export default function SacredSpaces() {
     return (
@@ -17,15 +189,10 @@ export default function SacredSpaces() {
                 <div className="grid md:grid-cols-2 gap-12 md:gap-20">
                     {/* Kapel Adorasi */}
                     <div className="reveal">
-                        <div className="relative aspect-[16/10] overflow-hidden bg-bg-soft group">
-                            <img
-                                src="/kapel.png"
-                                alt="Suasana Kapel Adorasi yang tenang"
-                                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                                loading="lazy"
-                            />
-                            <div className="absolute inset-0 bg-ink/5" />
-                        </div>
+                        <ImageSlider 
+                            images={KAPEL_IMAGES} 
+                            alt="Kapel Adorasi Goa Maria Desa Putera" 
+                        />
                         <div className="mt-8">
                             <div className="flex items-center gap-3 text-sage-deep mb-4">
                                 <Church size={18} strokeWidth={1.5} />
@@ -46,15 +213,10 @@ export default function SacredSpaces() {
 
                     {/* Taman Jalan Salib */}
                     <div className="reveal" style={{ transitionDelay: "150ms" }}>
-                        <div className="relative aspect-[16/10] overflow-hidden bg-bg-soft group">
-                            <img
-                                src="/jalansalib.png"
-                                alt="Jalan Salib di tengah taman rindang"
-                                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                                loading="lazy"
-                            />
-                            <div className="absolute inset-0 bg-ink/5" />
-                        </div>
+                        <ImageSlider 
+                            images={JALAN_SALIB_IMAGES} 
+                            alt="Taman Jalan Salib Goa Maria Desa Putera" 
+                        />
                         <div className="mt-8">
                             <div className="flex items-center gap-3 text-sage-deep mb-4">
                                 <Cross size={18} strokeWidth={1.5} />
