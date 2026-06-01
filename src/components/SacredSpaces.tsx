@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { createPortal } from "react-dom";
 import { Church, Cross, ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -28,6 +29,10 @@ function ImageSlider({ images, alt }: ImageSliderProps) {
     React.useEffect(() => {
         if (!isLightboxOpen) return;
 
+        // Prevent body scroll when lightbox is opened
+        const originalOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === "ArrowRight") setCurrentIndex((prev) => (prev + 1) % images.length);
             if (e.key === "ArrowLeft") setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
@@ -35,7 +40,10 @@ function ImageSlider({ images, alt }: ImageSliderProps) {
         };
 
         window.addEventListener("keydown", handleKeyDown);
-        return () => window.removeEventListener("keydown", handleKeyDown);
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+            document.body.style.overflow = originalOverflow;
+        };
     }, [isLightboxOpen, images.length]);
 
     const handleNext = (e: React.MouseEvent) => {
@@ -102,72 +110,77 @@ function ImageSlider({ images, alt }: ImageSliderProps) {
                 </div>
             </div>
 
-            {/* Lightbox */}
-            <AnimatePresence>
-                {isLightboxOpen && (
-                    <motion.div 
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[100] flex items-center justify-center bg-ink/95 backdrop-blur-md p-4 md:p-12 lg:p-16"
-                        onClick={() => setIsLightboxOpen(false)}
-                    >
-                        <motion.button 
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            className="absolute top-6 right-6 md:top-10 md:right-10 text-white/50 hover:text-white transition-colors z-[120]"
+            {/* Lightbox rendered via React Portal to prevent element stacking traps */}
+            {typeof document !== "undefined" && createPortal(
+                <AnimatePresence>
+                    {isLightboxOpen && (
+                        <motion.div 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="fixed inset-0 z-[10000] flex flex-col justify-between bg-black/95 backdrop-blur-md select-none"
                             onClick={() => setIsLightboxOpen(false)}
                         >
-                            <X size={36} strokeWidth={1.5} />
-                        </motion.button>
+                            {/* Top Bar */}
+                            <div className="w-full flex items-center justify-between p-6 md:px-12 md:py-8 z-[10010]" onClick={(e) => e.stopPropagation()}>
+                                {/* Top Left: Index info */}
+                                <div className="text-white/70 font-mono text-sm tracking-widest">
+                                    {currentIndex + 1} / {images.length}
+                                </div>
+                                
+                                {/* Top Right: Actions */}
+                                <div className="flex items-center gap-6 text-white/50">
+                                    <button className="hover:text-white transition-colors" aria-label="Toggle Fullscreen">
+                                        
+                                    </button>
+                                    <button 
+                                        className="hover:text-white transition-colors" 
+                                        onClick={() => setIsLightboxOpen(false)}
+                                        aria-label="Close Lightbox"
+                                    >
+                                        <X size={24} strokeWidth={1.5} />
+                                    </button>
+                                </div>
+                            </div>
 
-                        <div className="relative w-full h-full flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
-                            <AnimatePresence mode="wait">
-                                <motion.img 
-                                    key={currentIndex}
-                                    initial={{ opacity: 0, x: 20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: -20 }}
-                                    transition={{ duration: 0.4, ease: "easeOut" }}
-                                    src={images[currentIndex]}
-                                    alt={alt}
-                                    className="max-w-full max-h-full object-contain shadow-2xl rounded-sm selection:bg-transparent"
-                                />
-                            </AnimatePresence>
-                            
-                            {/* Lightbox Nav */}
-                            <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-0 md:px-0 pointer-events-none">
+                            {/* Mid Section: Image and viewport navigation */}
+                            <div className="relative flex-grow w-full flex items-center justify-center p-4 md:p-8" onClick={(e) => e.stopPropagation()}>
+                                <div className="relative w-full h-full max-h-[82vh] max-w-[95vw] md:max-h-[85vh] flex items-center justify-center">
+                                    <AnimatePresence mode="wait">
+                                        <motion.img 
+                                            key={currentIndex}
+                                            initial={{ opacity: 0, scale: 0.97 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.97 }}
+                                            transition={{ duration: 0.3, ease: "easeOut" }}
+                                            src={images[currentIndex]}
+                                            alt={alt}
+                                            className="max-h-[75vh] md:max-h-[82vh] max-w-full object-contain shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)] rounded-sm border border-white/5"
+                                        />
+                                    </AnimatePresence>
+                                </div>
+
+                                {/* Fixed Navigation Arrows on global sides */}
                                 <button 
                                     onClick={handlePrev}
-                                    className="w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center text-white/30 hover:text-white hover:bg-white/10 transition-all pointer-events-auto -translate-x-4 md:-translate-x-10"
+                                    className="absolute left-2 sm:left-4 md:left-8 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full flex items-center justify-center text-white/40 hover:text-white hover:bg-white/5 transition-all z-[10020]"
+                                    aria-label="Sebelumnya"
                                 >
-                                    <ChevronLeft size={48} strokeWidth={1} />
+                                    <ChevronLeft size={44} strokeWidth={1} />
                                 </button>
                                 <button 
                                     onClick={handleNext}
-                                    className="w-14 h-14 md:w-20 md:h-20 rounded-full flex items-center justify-center text-white/30 hover:text-white hover:bg-white/10 transition-all pointer-events-auto translate-x-4 md:translate-x-10"
+                                    className="absolute right-2 sm:right-4 md:right-8 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full flex items-center justify-center text-white/40 hover:text-white hover:bg-white/5 transition-all z-[10020]"
+                                    aria-label="Berikutnya"
                                 >
-                                    <ChevronRight size={48} strokeWidth={1} />
+                                    <ChevronRight size={44} strokeWidth={1} />
                                 </button>
                             </div>
-
-                            {/* Lightbox Indicators */}
-                            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex gap-2 p-6">
-                                {images.map((_, idx) => (
-                                    <button
-                                        key={idx}
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setCurrentIndex(idx);
-                                        }}
-                                        className={`h-1 rounded-full transition-all duration-500 ${idx === currentIndex ? 'bg-white w-8' : 'bg-white/20 w-4'}`}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                        </motion.div>
+                    )}
+                </AnimatePresence>,
+                document.body
+            )}
         </>
     );
 }
