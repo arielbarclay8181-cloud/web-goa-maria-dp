@@ -29,7 +29,7 @@ export default function About() {
                         <p>
                             Goa Maria Desa Putera berdiri di kompleks  
                             Panti Asuhan Desa Putera, Jagakarsa — 
-                            diberkati pada tanggal 5 Mei 2019 oleh Bapa Uskup Jakarta, Mgr Ignatius Suharyo.
+                            diberkati pada tanggal 5 Mei 2019 oleh Bapa Uskup Agung Jakarta, Mgr Ignatius Suharyo.
                             sebuah tempat bagi siapa saja yang ingin singgah,
                             berdoa, atau hanya mencari sejenak ketenangan.
                             Patung Bunda Maria berdiri damai di antara
@@ -37,7 +37,7 @@ export default function About() {
                             Kapel Adorasi.
                         </p>
                         <p>
-                            Setiap sudutnya dipelihara oleh anak-anak panti.
+                            Setiap sudutnya dipelihara oleh keluaraga besar panti.
                             Tempat yang asri dan sunyi untuk berdoa dan berziarah
                             dengan kesederhanaan bangunan dan tata letak adalah wujud
                             bahwa doa yang sungguh-sungguh tidak butuh
