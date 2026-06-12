@@ -69,7 +69,7 @@ export default function About() {
                 <div className="md:col-span-6 reveal" style={{ transitionDelay: "200ms" }}>
                     <div className="relative aspect-[4/5] overflow-hidden bg-bg-soft">
                         <img
-                            src="about.jpeg"
+                            src="about.avif"
                             alt="Cahaya pagi menembus dedaunan di taman doa"
                             className="w-full h-full object-cover"
                             loading="lazy"

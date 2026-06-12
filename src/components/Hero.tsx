@@ -17,7 +17,7 @@ export default function Hero() {
             {/* Background image */}
             <div className="absolute inset-0">
                 <img
-                    src="/home.jpg"
+                    src="/home.avif"
                     alt="Cahaya pagi menembus pepohonan rindang"
                     className="kenburns w-full h-full object-cover"
                     loading="eager"
@@ -31,7 +31,7 @@ export default function Hero() {
                     <div className="reveal mb-8">
                         <div className="reveal mb-8">
                         <img 
-                            src="/logo.png" 
+                            src="/logo.avif" 
                             alt="Logo Goa Maria" 
                             className="w-80 h-12 md:w-20 md:h-20 object-contain" 
                         />

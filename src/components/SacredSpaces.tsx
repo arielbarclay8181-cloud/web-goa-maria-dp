@@ -4,17 +4,18 @@ import { Church, Cross, ChevronLeft, ChevronRight, Maximize2, X } from "lucide-r
 import { motion, AnimatePresence } from "motion/react";
 
 const KAPEL_IMAGES = [
-    "/kapel1.jpeg",
-    "/kapel2.jpeg",
-    "/kapel3.jpeg",
-    "/kapel4.jpeg",
+    "/kapel1.avif",
+    "/kapel2.avif",
+    "/kapel3.avif",
+    "/kapel4.avif",
 ];
 
 const JALAN_SALIB_IMAGES = [
-    "/jalansalib.png",
-    "/jalansalib2.jpeg",
-    "/jalansalib3.jpeg",
-    "/jalansalib4.jpeg",
+    "/jalansalib.avif",
+    "/jalansalib2.avif",
+    "/jalansalib3.avif",
+    "/jalansalib4.avif",
+    "/jalansalib5.avif",
 ];
 
 interface ImageSliderProps {
@@ -306,7 +307,7 @@ export default function SacredSpaces() {
                                 <h3 className="font-serif text-2xl md:text-3xl text-ink">Taman Jalan Salib</h3>
                             </div>
                             <p className="text-[15px] leading-[1.8] text-ink-soft">
-                                Susuri 14 stasi peristiwa sengsara Yesus Kristus di tengah taman hijau yang asri. 
+                                Susuri 14 perhentian peristiwa sengsara Yesus Kristus di tengah taman hijau yang asri. 
                                 Setiap perhentian mengundang kita untuk merenungkan kasih dan pengorbanan-Nya, 
                                 ditemani semilir angin dan kicauan burung yang menambah kesyahduan doa Anda.
                             </p>

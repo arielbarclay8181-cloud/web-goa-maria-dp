@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Flower2, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 const links = [
     { id: "beranda", label: "Beranda" },
     { id: "tentang", label: "Tentang" },
     { id: "ruang-suci", label: "Ruang Suci" },
+    { id: "fasilitas", label: "Fasilitas" },
     { id: "lokasi", label: "Lokasi" },
     { id: "kontak", label: "Kontak" },
 ];
@@ -57,11 +58,11 @@ export default function Navbar() {
                     className="font-serif text-xl md:text-2xl tracking-tight text-ink cursor-pointer flex items-center gap-3"
                 >
                     <img 
-                        src="/logo.png" 
-                        alt="Logo Goa Maria" 
-                        className="w-6 h-6 md:w-8 md:h-8 object-contain" 
+                        src="/logo.avif" 
+                        alt="Logo Goa Maria Desa Putera" 
+                        className="w-8 h-8 md:w-10 md:h-10 object-contain"
                     />
-                    <span>
+                    <span className="hidden sm:inline">
                         Goa Maria{" "}
                         <span className="text-muted italic">
                             Desa Putera
